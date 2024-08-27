@@ -203,6 +203,48 @@ v........v
 vvvvvvvvvv`)
 setBackground(background)
 
+
+const checkFruit = () => {
+  const plr = getFirst(snake)
+  if (!plr) {return}
+  
+  fruits.forEach(f => {
+    const fruit = getFirst(f)
+    if (!fruit) {return}
+
+    if (fruit.x === plr.x && fruit.y === plr.y) {
+      fruit.remove()
+    } 
+  })
+}
+
+const checkCollision = () => {
+  const plr = getFirst(snake)
+  if (!plr) {return}
+
+  const pool = [...getAll(wall), ...getAll(snakeBody)]
+  const collision = pool.some(p => p.x === plr.x && p.y === plr.y)
+
+  if (!collision) {return}
+  plr.remove()
+
+  setMap(map`
+..........
+..........
+..........
+..........
+..........
+..v....v..
+..........
+...vvvv...
+...v..v...
+..........`)
+  addText("Sorry, you lose", {
+    x: width() / 2 - 2,
+    y: height() / 2
+  })
+}
+
 const mP = (x, y) => {
   const plr = getFirst(snake)
   if (!plr) {return}
@@ -229,6 +271,9 @@ const move = () => {
       mP(0, 1)
       break;
   }
+
+  checkFruit()
+  checkCollision()
 }
 
 onInput("a", () => {
