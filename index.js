@@ -203,6 +203,26 @@ v........v
 vvvvvvvvvv`)
 setBackground(background)
 
+let cSnake = []
+
+const appendSnakeBody = () => {
+  const s = getFirst(snake)
+  if (!s) {return}
+
+  const b = getFirst(snakeBody)
+  if (!b) {return}
+
+  const x = s.x
+  const y = s.y
+
+  const newBody = addSprite(x, y, snakeBody)
+  cSnake.push(newBody)
+
+  if (cSnake.length > 1) {
+    const tail = cSnake.shift()
+    tail.remove()
+  }
+}
 
 const checkFruit = () => {
   const plr = getFirst(snake)
@@ -214,6 +234,8 @@ const checkFruit = () => {
 
     if (fruit.x === plr.x && fruit.y === plr.y) {
       fruit.remove()
+      playTune(sounds.eat)
+      appendSnakeBody()
     } 
   })
 }
@@ -227,6 +249,7 @@ const checkCollision = () => {
 
   if (!collision) {return}
   plr.remove()
+  playTune(sounds.lose)
 
   setMap(map`
 ..........
